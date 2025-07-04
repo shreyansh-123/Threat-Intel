@@ -7,28 +7,25 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
+// ✅ Static CORS config for GitHub Pages
 app.use(cors({
   origin: 'https://shreyansh-123.github.io',
-  methods: ['GET', 'POST'],
+  methods: ['GET'],
   optionsSuccessStatus: 200,
   allowedHeaders: ['Content-Type']
 }));
 
-
-
-
-// Serve frontend from /public
+// Serve frontend (optional for local use)
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Utility
+// Utility functions
 async function fetchJSON(url, headers = {}) {
   const res = await fetch(url, { headers });
   return res.json();
 }
-
 function isValidIP(ioc) {
   return /^(?:\d{1,3}\.){3}\d{1,3}$/.test(ioc);
 }
@@ -41,7 +38,7 @@ function isValidURL(ioc) {
   }
 }
 
-// TI Handlers
+// Threat Intel handlers
 const lookupHandlers = {
   virustotal: async (ioc, keys) => {
     const key = keys.vt || process.env.VT_API_KEY;
@@ -136,14 +133,19 @@ const lookupHandlers = {
   }
 };
 
-// Main Lookup Route
+// ✅ GET-based lookup route
 app.get('/lookup', async (req, res) => {
-  const queryParam = req.query.query;
-  const iocs = queryParam ? queryParam.split(',').map(i => i.trim()) : [];
-  const keys = {}; // You can update this later if you add key-passing via GET
+  const queryParam = req.query.query || '';
+  const iocs = queryParam.split(',').map(i => i.trim()).filter(i => i);
+
+  const keys = {
+    vt: req.query.vt,
+    abuse: req.query.abuse,
+    shodan: req.query.shodan,
+    ipqs: req.query.ipqs
+  };
 
   const results = [];
-
 
   for (const ioc of iocs) {
     const result = { ioc, details: {}, summary: [] };
@@ -151,14 +153,12 @@ app.get('/lookup', async (req, res) => {
 
     for (const [source, handler] of Object.entries(lookupHandlers)) {
       try {
-        // Skip incompatible lookups
         if (['abuseipdb', 'shodan', 'ipapi', 'ipqualityscore'].includes(source) && type !== 'ip') continue;
         if (source === 'urlscan' && type !== 'url') continue;
 
         const data = await handler(ioc, keys);
         result.details[source] = data;
 
-        // Final summary logic
         if (source === 'virustotal') {
           const isMalicious = data.malicious > 0;
           const isSuspicious = data.suspicious > 0;
