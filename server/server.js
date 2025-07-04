@@ -7,7 +7,16 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
-const cors = require('cors');
+const allowedOrigins = [
+  'https://shreyansh123.github.io', // ✅ Your GitHub Pages domain
+  'http://localhost:3000' // optional for testing
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 
 const allowedOrigins = [
   'https://threat-intel-tmjz.onrender.com',
