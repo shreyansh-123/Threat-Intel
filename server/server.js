@@ -7,25 +7,42 @@ const path = require('path');
 const app = express();
 app.use(express.json());
 
+// const allowedOrigins = [
+//   'https://shreyansh123.github.io', // ✅ Your GitHub Pages domain
+//   'http://localhost:3000' // optional for testing
+// ];
+
+// app.use(cors({
+//   origin: allowedOrigins,
+//   methods: ['GET', 'POST'],
+//   allowedHeaders: ['Content-Type']
+// }));
+
+// const allowedOrigins = [
+//   'https://threat-intel-tmjz.onrender.com',
+//   'http://localhost:3000' // optional for local testing
+// ];
+
+// app.use(cors({
+//   origin: allowedOrigins,
+//   methods: ['GET', 'POST'],
+//   allowedHeaders: ['Content-Type']
+// }));
+
 const allowedOrigins = [
-  'https://shreyansh123.github.io', // ✅ Your GitHub Pages domain
-  'http://localhost:3000' // optional for testing
+  'https://shreyansh-123.github.io',
+  'http://localhost:3000'
 ];
 
 app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type']
-}));
-
-const allowedOrigins = [
-  'https://threat-intel-tmjz.onrender.com',
-  'http://localhost:3000' // optional for local testing
-];
-
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ['GET', 'POST'],
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
+  methods: ['GET','POST'],
   allowedHeaders: ['Content-Type']
 }));
 
