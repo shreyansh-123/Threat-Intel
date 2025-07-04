@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Threat Intel Lookup Toolkit</title>
+  
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🛡 Threat Intel Lookup Toolkit</h1>
+
+    <div class="api-inputs">
+  <label>VirusTotal API:</label>
+  <input type="text" id="vtKey" placeholder="Optional - use your own">
+  
+  <label>AbuseIPDB API:</label>
+  <input type="text" id="abuseKey" placeholder="Optional - use your own">
+
+  <label>Shodan API:</label>
+  <input type="text" id="shodanKey" placeholder="Optional - use your own">
+
+  <label>IPQualityScore API:</label>
+  <input type="text" id="ipqsKey" placeholder="Optional - use your own">
+</div>
+
+    <label for="iocInput">Enter IOCs (one per line):</label>
+
+    <textarea id="iocInput" placeholder="Example:\n8.8.8.8\nhttps://example.com\n44d8612fea8a8f36de82e1278abb02f"></textarea>
+    
+    <button onclick="lookupIOCs()">🔍 Start Lookup</button>
+    
+    <div id="results"></div>
+    <div id="summary"></div>
+  </div>
+  <footer style="text-align: center; margin-top: 40px; font-size: 14px; color: #aaa;">
+    <p>© 2025 <b>Shreyansh</b> | <a href="https://www.linkedin.com/in/shreyansh-porwal-2703/" target="_blank" style="color: #0af;">Contact Developer</a></p>
+  </footer> 
+  <script src="script.js"></script>
+  
+</body>
+</html>
