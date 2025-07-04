@@ -5,8 +5,21 @@ const fetch = require('node-fetch');
 const path = require('path');
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+
+const cors = require('cors');
+
+const allowedOrigins = [
+  'https://threat-intel-tmjz.onrender.com',
+  'http://localhost:3000' // optional for local testing
+];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
+
 
 // Serve frontend from /public
 app.use(express.static(path.join(__dirname, 'public')));
