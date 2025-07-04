@@ -3,20 +3,16 @@ async function lookupIOCs() {
   if (!input) return alert('Please enter some IOCs.');
 
   const iocs = input.split('\n').map(i => i.trim()).filter(i => i);
- const response = await fetch('https://threat-intel-tmjz.onrender.com/lookup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
-  iocs,
-  keys: {
-    vt: document.getElementById('vtKey').value.trim(),
-    abuse: document.getElementById('abuseKey').value.trim(),
-    shodan: document.getElementById('shodanKey').value.trim(),
-    ipqs: document.getElementById('ipqsKey').value.trim()
-  }
-})
+const vt = document.getElementById('vtKey').value.trim();
+const abuse = document.getElementById('abuseKey').value.trim();
+const shodan = document.getElementById('shodanKey').value.trim();
+const ipqs = document.getElementById('ipqsKey').value.trim();
 
-  });
+const query = iocs.join(',');
+const url = `https://threat-intel-tmjz.onrender.com/lookup?query=${encodeURIComponent(query)}&vt=${vt}&abuse=${abuse}&shodan=${shodan}&ipqs=${ipqs}`;
+
+const response = await fetch(url);
+const { results } = await response.json();
 
   const { results } = await response.json();
   const resultsDiv = document.getElementById('results');
