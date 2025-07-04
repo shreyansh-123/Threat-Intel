@@ -137,9 +137,13 @@ const lookupHandlers = {
 };
 
 // Main Lookup Route
-app.post('/lookup', async (req, res) => {
-  const { iocs, keys = {} } = req.body;
+app.get('/lookup', async (req, res) => {
+  const queryParam = req.query.query;
+  const iocs = queryParam ? queryParam.split(',').map(i => i.trim()) : [];
+  const keys = {}; // You can update this later if you add key-passing via GET
+
   const results = [];
+
 
   for (const ioc of iocs) {
     const result = { ioc, details: {}, summary: [] };
