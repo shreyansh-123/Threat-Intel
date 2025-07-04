@@ -3,7 +3,7 @@ async function lookupIOCs() {
   if (!input) return alert('Please enter some IOCs.');
 
   const iocs = input.split('\n').map(i => i.trim()).filter(i => i);
-  const response = await fetch('http://localhost:3000/lookup', {
+ const response = await fetch('https://your-backend-name.onrender.com/lookup', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({
